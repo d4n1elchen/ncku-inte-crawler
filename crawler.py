@@ -68,7 +68,7 @@ for key, url in urls.viewitems():
     if result != None :
         news_old = [result[k] for k in result]
     else:
-        news_old = []
+        news_old = [{'date': '', 'url': '', 'title': ''}]
 
     news_now = sorted(news_now, key=itemgetter('date','url'), reverse=True)
     news_old = sorted(news_old, key=itemgetter('date','url'), reverse=True)
@@ -79,7 +79,7 @@ for key, url in urls.viewitems():
         print(key+": Data update!")
 
         old_date =  news_old[0]['date']
-        s = next(i for i, n in enumerate(news_now) if n['date'] == old_date)
+        s = next((i for i, n in enumerate(news_now) if n['date'] == old_date), None)
 
         subject = "國際事務處資訊更新報 - " + dept[key]
         html = dept[key] + ": <br /><br />" 
