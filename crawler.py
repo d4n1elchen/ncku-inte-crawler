@@ -78,8 +78,8 @@ for key, url in urls.viewitems():
     else:
         print(key+": Data update!")
 
-        old_date =  news_old[0]['date']
-        s = next((i for i, n in enumerate(news_now) if n['date'] == old_date), None)
+        old_url =  news_old[0]['url']
+        s = next((i for i, n in enumerate(news_now) if n['url'] == old_url), None)
 
         subject = "國際事務處資訊更新報 - " + dept[key]
         html = dept[key] + ": <br /><br />" 
