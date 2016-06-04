@@ -87,7 +87,7 @@ for key, url in urls.viewitems():
         for n in news_now[:s]:
             html += '<a href="' + n['url'] + '">' + (n['date'] + n['title']).encode('utf8') + '</a><br /><br />'
 
-        with open(os.path.dirname(os.path.abspath(__file__)) + "/emails-debug.txt") as f:
+        with open(os.path.dirname(os.path.abspath(__file__)) + "/emails.txt") as f:
             for e in f:
                 sendMail(email, pwd, e.strip(), subject, html)
 
