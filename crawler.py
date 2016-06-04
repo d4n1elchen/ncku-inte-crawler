@@ -29,14 +29,15 @@ def post_all(path, datas):
 
         title = d['title']
         url = d['url']
+        date = d['date']
 
-        fb.post('/'+key, {'title': title, 'url': url})
+        fb.post('/'+key, {'title': title, 'url': url, 'date': date})
 
 isad_url = "http://isad.oia.ncku.edu.tw/files/40-1381-11-1.php?Lang=zh-tw"
 ird_url = "http://ird.oia.ncku.edu.tw/files/40-1382-11-1.php?Lang=zh-tw"
 iisd_url = "http://iisd.oia.ncku.edu.tw/files/40-1383-11-1.php?Lang=zh-tw"
 
-query = ".baseTB.listSD tr.row_1 .h5 a, .baseTB.listSD tr.row_2 .h5 a"
+query = ".baseTB.listSD tr.row_1 .h5, .baseTB.listSD tr.row_2 .h5"
 
 fb_url = "https://ncku-inte-crawler.firebaseio.com/"
 secret = "V164livV3QtVxWBJWTQERIAoI9XVSWs64v6kxtcC"
@@ -60,7 +61,7 @@ for key, url in urls.viewitems():
     s = soup.select
 
     newses = s(query)
-    news_now = [{'title': news.get_text(),'url': news.get("href") } for news in newses]
+    news_now = [{'title': news.select("a")[0].get_text(),'url': news.select("a")[0].get("href"), 'date': news.select("span")[0].get_text() } for news in newses]
 
     result = fb.get(path, None) 
     if result != None :
@@ -77,9 +78,9 @@ for key, url in urls.viewitems():
         html = dept[key] + ": <br />" 
 
         for n in news_now:
-            html += '<a href="' + n['url'] + '">' + n['title'].encode('utf8') + '</a><br /><br />'
+            html += '<a href="' + n['url'] + '">' + (n['date'] + n['title']).encode('utf8') + '</a><br /><br />'
 
-        with open(os.path.dirname(os.path.abspath(__file__)) + "/emails.txt") as f:
+        with open(os.path.dirname(os.path.abspath(__file__)) + "/emails-debug.txt") as f:
             for e in f:
                 sendMail(email, pwd, e.strip(), subject, html)
 
