@@ -2,6 +2,7 @@
 import requests
 import lxml
 import smtplib
+import os
 from bs4 import BeautifulSoup as Soup
 from firebase import firebase
 from email.MIMEMultipart import MIMEMultipart
@@ -78,7 +79,7 @@ for key, url in urls.viewitems():
         for n in news_now:
             html += '<a href="' + n['url'] + '">' + n['title'].encode('utf8') + '</a><br /><br />'
 
-        with open("emails.txt") as f:
+        with open(os.path.dirname(os.path.abspath(__file__)) + "/emails.txt") as f:
             for e in f:
                 sendMail(email, pwd, e.strip(), subject, html)
 
