@@ -80,7 +80,7 @@ for key, url in urls.viewitems():
 
         with open("emails.txt") as f:
             for e in f:
-                sendMail(email, pwd, e, subject, html)
+                sendMail(email, pwd, e.strip(), subject, html)
 
         fb.delete(path, None)
         post_all(path, news_now)
