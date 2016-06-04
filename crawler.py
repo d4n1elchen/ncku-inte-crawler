@@ -3,6 +3,7 @@ import requests
 import lxml
 import smtplib
 import os
+import ConfigParser                    
 from bs4 import BeautifulSoup as Soup
 from firebase import firebase
 from email.MIMEMultipart import MIMEMultipart
@@ -34,16 +35,23 @@ def post_all(path, datas):
 
         fb.post('/'+key, {'title': title, 'url': url, 'date': date})
 
+config = ConfigParser.RawConfigParser()
+config.read(os.path.dirname(os.path.abspath(__file__))+"/config") 
+
 isad_url = "http://isad.oia.ncku.edu.tw/files/40-1381-11-1.php?Lang=zh-tw"
 ird_url = "http://ird.oia.ncku.edu.tw/files/40-1382-11-1.php?Lang=zh-tw"
 iisd_url = "http://iisd.oia.ncku.edu.tw/files/40-1383-11-1.php?Lang=zh-tw"
 
 query = ".baseTB.listSD tr.row_1 .h5, .baseTB.listSD tr.row_2 .h5"
 
-fb_url = "https://ncku-inte-crawler.firebaseio.com/"
-secret = "V164livV3QtVxWBJWTQERIAoI9XVSWs64v6kxtcC"
-email = "nckuintecrawler@gmail.com"
-pwd = "ncku2757575"
+fb_url = config.get("Firebase", "url")
+secret = config.get("Firebase", "secret")
+email = config.get("Firebase", "email") 
+
+gmail = config.get("Gmail", "gmail")
+pwd = config.get("Gmail", "pwd") 
+
+mails = config.get("Mails", "mails").replace('\n','').split(',')
 
 urls = { 'isad': isad_url, 'ird': ird_url, 'iisd': iisd_url }
 dept = { 'isad': '國際學生事務組', 'ird': '國際合作組', 'iisd': '國際化資訊與服務組' }
@@ -87,9 +95,8 @@ for key, url in urls.viewitems():
         for n in news_now[:s]:
             html += '<a href="' + n['url'] + '">' + (n['date'] + n['title']).encode('utf8') + '</a><br /><br />'
 
-        with open(os.path.dirname(os.path.abspath(__file__)) + "/emails.txt") as f:
-            for e in f:
-                sendMail(email, pwd, e.strip(), subject, html)
+        for mail in mails:
+            sendMail(gmail, pwd, mail, subject, html)
 
         fb.delete(path, None)
         post_all(path, news_now)
