@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup as Soup
 from firebase import firebase
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
+from operator import itemgetter
 
 def sendMail(strGmailUser,strGmailPassword,strRecipient,strSubject,strContent):
     strMessage = MIMEMultipart()
@@ -69,15 +70,21 @@ for key, url in urls.viewitems():
     else:
         news_old = []
 
-    if (sorted(news_now) == sorted(news_old)):
+    news_now = sorted(news_now, key=itemgetter('date','url'), reverse=True)
+    news_old = sorted(news_old, key=itemgetter('date','url'), reverse=True)
+
+    if news_now[0] == news_old[0]:
         print(key+": Data up to date.")
     else:
         print(key+": Data update!")
 
-        subject = "國際事務處資訊更新報 - " + dept[key]
-        html = dept[key] + ": <br />" 
+        old_date =  news_old[0]['date']
+        s = next(i for i, n in enumerate(news_now) if n['date'] == old_date)
 
-        for n in news_now:
+        subject = "國際事務處資訊更新報 - " + dept[key]
+        html = dept[key] + ": <br /><br />" 
+
+        for n in news_now[:s]:
             html += '<a href="' + n['url'] + '">' + (n['date'] + n['title']).encode('utf8') + '</a><br /><br />'
 
         with open(os.path.dirname(os.path.abspath(__file__)) + "/emails-debug.txt") as f:
