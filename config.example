@@ -1,0 +1,15 @@
+# Firebase Information
+[Firebase]
+url = https://your-firebase-url.firebaseio.com/
+secret = your-firebase-secret
+email =  your@example.com
+
+# Setting gmail account for sending mail
+[Gmail]
+gmail = send@gmail.com
+pwd = password
+
+# Listing destination mail address
+[Mails]
+mails = dest1@example.com,
+  dest2@exmaple.com
