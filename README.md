@@ -12,6 +12,7 @@ requests
 beautifulsoup4
 lxml
 python-firebase
+firebase-token-generator
 ```
 
 # Installation
