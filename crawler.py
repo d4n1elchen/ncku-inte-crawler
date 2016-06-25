@@ -72,7 +72,19 @@ for key, url in urls.viewitems():
     newses = s(query)
     news_now = [{'title': news.select("a")[0].get_text(),'url': news.select("a")[0].get("href"), 'date': news.select("span")[0].get_text() } for news in newses]
 
-    result = fb.get(path, None) 
+    try:
+        result = fb.get(path, None) 
+    except:
+        type, message, traceback = sys.exc_info()
+    while traceback:
+        print('..........')
+        print(type)
+        print(message)
+        print('function or module？', traceback.tb_frame.f_code.co_name)
+        print('file？', traceback.tb_frame.f_code.co_filename)
+        traceback = traceback.tb_next
+        continue
+
     if result != None :
         news_old = [result[k] for k in result]
     else:
@@ -82,7 +94,7 @@ for key, url in urls.viewitems():
     news_old = sorted(news_old, key=itemgetter('date','url'), reverse=True)
 
     if news_now[0] == news_old[0]:
-        print(key+": Data up to date.")
+        # print(key+": Data up to date.")
     else:
         print(key+": Data update!")
 
