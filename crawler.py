@@ -76,16 +76,16 @@ for key, url in urls.viewitems():
         result = fb.get(path, None) 
     except:
         type, message, traceback = sys.exc_info()
-    while traceback:
-        print('..........')
-        print(type)
-        print(message)
-        print('function or module？', traceback.tb_frame.f_code.co_name)
-        print('file？', traceback.tb_frame.f_code.co_filename)
-        traceback = traceback.tb_next
+        while traceback:
+            print('..........')
+            print(type)
+            print(message)
+            print('function or module？', traceback.tb_frame.f_code.co_name)
+            print('file？', traceback.tb_frame.f_code.co_filename)
+            traceback = traceback.tb_next
         continue
 
-    if result != None :
+    if result != None:
         news_old = [result[k] for k in result]
     else:
         news_old = [{'date': '', 'url': '', 'title': ''}]
@@ -93,9 +93,7 @@ for key, url in urls.viewitems():
     news_now = sorted(news_now, key=itemgetter('date','url'), reverse=True)
     news_old = sorted(news_old, key=itemgetter('date','url'), reverse=True)
 
-    if news_now[0] == news_old[0]:
-        # print(key+": Data up to date.")
-    else:
+    if news_now[0] != news_old[0]:
         print(key+": Data update!")
 
         old_url =  news_old[0]['url']
